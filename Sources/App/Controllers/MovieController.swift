@@ -12,7 +12,7 @@ struct MovieController: RouteCollection {
     func boot(router: Router) throws {
         let moviesGroup = router.grouped("api/movies")
         moviesGroup.get(use: getAll)
-        //        moviesGroup.get("rating", Int.parameter, use: getAllByRating)
+        //moviesGroup.get("rating", Int.parameter, use: getAllByRating)
         
         let movieGroup = router.grouped("api/movie")
         movieGroup.get(Movie.parameter, use: getById)
@@ -26,6 +26,7 @@ struct MovieController: RouteCollection {
         return Movie.query(on: request).all()
     }
     
+    //api/movie/${movieId}
     func getById(request: Request) throws -> Future<Movie> {
         return try request.parameters.next(Movie.self)
     }
@@ -39,6 +40,7 @@ struct MovieController: RouteCollection {
         return movie.save(on: request)
     }
     
+    //api/movie/${movieId}
     func delete(request: Request) throws -> Future<Movie> {
         return try request.parameters.next(Movie.self).delete(on: request)
     }

@@ -15,6 +15,7 @@ final class ReviewController: RouteCollection {
         reviewGroup.post(Review.self, use: add)
         reviewGroup.delete(Review.parameter, use: delete)
         reviewGroup.get(Review.parameter,"movie", use: getMovieFromReview)
+        reviewGroup.put(Review.self, use: update)
         
         let reviewsGroup = router.grouped("api/reviews")
         reviewsGroup.get(use: getAll)
@@ -42,5 +43,9 @@ final class ReviewController: RouteCollection {
         return try request.parameters.next(Review.self).flatMap(to: Movie.self) { review in
             return review.movie.get(on: request)
         }
+    }
+    
+    func update(request: Request, review: Review) throws -> Future<HTTPStatus> {
+        review.update(on: request).transform(to: .ok)
     }
 }

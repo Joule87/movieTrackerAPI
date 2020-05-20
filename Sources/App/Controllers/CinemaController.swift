@@ -16,6 +16,7 @@ final class CinemaController: RouteCollection {
         cinemaGroup.post(Cinema.parameter, "movie", Movie.parameter, use: addMovieToCinema)
         cinemaGroup.delete(Cinema.parameter, use: delete)
         cinemaGroup.get(Cinema.parameter, "movies", use: getAllMoviesOnCinema)
+        cinemaGroup.put(Cinema.self, use: update)
         
         let cinemasGroup = router.grouped("api/cinemas")
         cinemasGroup.get(use: getAll)
@@ -25,12 +26,13 @@ final class CinemaController: RouteCollection {
         return review.save(on: request)
     }
     
+    //api/cinema/${cinemaId}/movie/${movieId}
     func addMovieToCinema(request: Request) throws -> Future<HTTPStatus> {
         return try flatMap(to: HTTPStatus.self, request.parameters.next(Cinema.self), request.parameters.next(Movie.self)) { cinema, movie in
             return cinema.movies.attach(movie, on: request).transform(to: .created)
         }
     }
-
+    
     func getAll(request: Request) throws -> Future<[Cinema]> {
         return Cinema.query(on: request).all()
     }
@@ -42,10 +44,15 @@ final class CinemaController: RouteCollection {
         }
     }
     
+    //api/cinema/${cinemaId}
     func delete(request: Request) throws -> Future<HTTPStatus> {
         return try request.parameters.next(Cinema.self).flatMap(to: HTTPStatus.self) { cinema in
             return cinema.delete(on: request).transform(to: .noContent)
         }
+    }
+
+    func update(request: Request, cinema: Cinema) -> Future<HTTPStatus> {
+        cinema.update(on: request).transform(to: .ok)
     }
 
 }
