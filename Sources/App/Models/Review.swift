@@ -26,7 +26,7 @@ extension Review: Migration {
     static func prepare(on connection: PostgreSQLConnection) -> Future<Void> {
         return Database.create(self, on: connection) { builder in
             try addProperties(to: builder)
-            builder.reference(from: \.movieId, to: \Movie.id)
+            builder.reference(from: \.movieId, to: \Movie.id, onDelete: .cascade)
         }
     }
 }

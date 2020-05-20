@@ -37,7 +37,6 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     migrations.add(model: CinemaMoviePivot.self, database: .psql)
     migrations.add(migration: UpdatingFKonCinemaMoviePivot.self, database: .psql)
     
-    
     //migrations.add(migration: AddingDescriptionToMovies.self, database: .psql)
     //migrations.add(migration: RemovingRatingFromMovies.self, database: .psql)
     
